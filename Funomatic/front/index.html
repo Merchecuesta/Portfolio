@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fun-O-Matic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Chewy', cursive;
+      background: url('fondo.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .chat-container {
+      background: rgba(255, 255, 255, 0.9);
+      width: 600px;
+      max-width: 90%;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: #a16afb;
+      color: rgb(8, 6, 6);
+      text-align: center;
+      padding: 20px;
+      font-size: 4rem;
+      font-weight: bold;
+    }
+
+    .chat-subtitle {
+      text-align: center;
+      font-size: 3rem;
+      font-weight: bold;
+      padding: 10px;
+      color: #010101;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      font-size: 1rem;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      padding: 10px 15px;
+      border-radius: 15px;
+      max-width: 80%;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .user {
+      background: #8867a9;
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 5px;
+    }
+
+    .bot {
+      background: #8867a9;
+      color: #333;
+      margin-right: auto;
+      border-bottom-left-radius: 5px;
+    }
+
+    .chat-input {
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      border-top: 1px solid #eee;
+      background: #8867a9;
+      gap: 10px;
+    }
+
+    .chat-input select, .chat-input button {
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+
+    .chat-input button {
+      background: #379ac5;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .chat-input button:hover {
+      background: #000000;
+    }
+
+    .bot-buttons button {
+      margin-right: 10px;
+      margin-top: 10px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      background-color: #379ac5;
+      color: white;
+      transition: 0.2s;
+    }
+
+    .bot-buttons button:hover {
+      background-color: #000000;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">Fun-O-Matic</div>
+    <div class="chat-subtitle">¿Qué plan te apetece?</div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input" id="chatInputDiv">
+      <select id="lugar">
+        <option value="dentro">Dentro de casa</option>
+        <option value="fuera">Fuera</option>
+        <option value="indiferente">Me da igual</option>
+      </select>
+
+      <select id="tipo">
+        <option value="tranquilo">Tranquilo</option>
+        <option value="creativo">Creativo</option>
+        <option value="emocionante">Emocionante</option>
+        <option value="deportivo">Deportivo</option>
+        <option value="elige">Elige por mí</option>
+      </select>
+
+      <select id="companeros">
+        <option value="solo">Solo</option>
+        <option value="acompañado">Acompañado</option>
+      </select>
+
+      <button onclick="sendMessage()">Generar Actividades</button>
+    </div>
+  </div>
+
+  <script>
+    function sendMessage() {
+      const lugar = document.getElementById("lugar").value;
+      const tipo = document.getElementById("tipo").value;
+      const companeros = document.getElementById("companeros").value;
+
+      const payload = { lugar, tipo, companeros };
+      const messages = document.getElementById("chatMessages");
+
+      document.getElementById("chatInputDiv").style.display = "none";
+
+      const userMsg = document.createElement("div");
+      userMsg.className = "message user";
+      userMsg.textContent = `Quiero actividades para: ${tipo}, ${lugar}, ${companeros}`;
+      messages.appendChild(userMsg);
+      messages.scrollTop = messages.scrollHeight;
+
+      fetch("http://127.0.0.1:5000/planes", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        const botMsg = document.createElement("div");
+        botMsg.className = "message bot";
+        botMsg.innerHTML = data.respuesta
+          .split("\n")
+          .filter(line => line.trim() !== "")
+          .map(line => `<div>${line}</div>`).join("");
+        messages.appendChild(botMsg);
+        messages.scrollTop = messages.scrollHeight;
+
+        const btnContainer = document.createElement("div");
+        btnContainer.className = "bot-buttons";
+
+        const yesBtn = document.createElement("button");
+        yesBtn.textContent = "Sí, me encantan";
+        yesBtn.onclick = () => {
+          const reply = document.createElement("div");
+          reply.className = "message bot";
+          reply.textContent = "¡Pues a por ello! ¡Que te lo pases muy bien!";
+          messages.appendChild(reply);
+          messages.scrollTop = messages.scrollHeight;
+          btnContainer.remove();
+        };
+
+        const noBtn = document.createElement("button");
+        noBtn.textContent = "No, me aburren";
+        noBtn.onclick = () => {
+          const reply = document.createElement("div");
+          reply.className = "message bot";
+          reply.textContent = "¿Quieres que genere nuevas ideas para ti?";
+          messages.appendChild(reply);
+          messages.scrollTop = messages.scrollHeight;
+          btnContainer.remove();
+          document.getElementById("chatInputDiv").style.display = "flex";
+        };
+
+        btnContainer.appendChild(yesBtn);
+        btnContainer.appendChild(noBtn);
+        messages.appendChild(btnContainer);
+        messages.scrollTop = messages.scrollHeight;
+      })
+      .catch(err => {
+        const botMsg = document.createElement("div");
+        botMsg.className = "message bot";
+        botMsg.textContent = "⚠️ Error al generar actividades. Intenta de nuevo.";
+        messages.appendChild(botMsg);
+        messages.scrollTop = messages.scrollHeight;
+        document.getElementById("chatInputDiv").style.display = "flex";
+      });
+    }
+  </script>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,34 @@
+# Entornos virtuales
+venv/
+ENV/
+.env
+.env.local
+.env.*.local
+
+# Cachés de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos de configuración de Docker que no quieres subir (opcional)
+docker-compose.override.yml
+
+# IDEs y editores
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Logs y bases de datos locales
+*.log
+*.sqlite3
+
+# Carpeta de build o dist si generas paquetes
+build/
+dist/
+*.egg-info/
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db

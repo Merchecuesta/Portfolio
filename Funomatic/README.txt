@@ -55,7 +55,7 @@ venv\Scripts\activate      # Windows
 pip install -r requirements.txt
 
 --Ejecutar aplicación
-python app/app.py
+python app.py
 Accede en tu navegador: http://localhost:5000
 
 2. Ejecutar usando Docker (recomendado)
@@ -109,6 +109,6 @@ Evitar exponer la app directamente a Internet sin seguridad adicional.
 
 Autor: Merche Cuesta
 
-GitHub: Portfolio Funomatic-Flask
+GitHub: https://github.com/Merchecuesta/Portfolio/tree/main/Funomatic
 
 Docker Hub: cuestame/funomatic

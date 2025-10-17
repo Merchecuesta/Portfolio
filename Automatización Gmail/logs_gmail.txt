@@ -1,0 +1,6 @@
+
+2025-10-07 12:09:20,211 - INFO - 📌 Inicio de flujo Prefect Gmail Bot
+2025-10-07 12:09:26,305 - INFO - Autenticación Gmail completada correctamente.
+2025-10-07 12:09:26,715 - INFO - Se encontraron 1 correos no leídos.
+2025-10-07 12:09:27,808 - INFO - Correo respondido a Cliente <cxxxxxx6@gxxxxx.es> como ventas
+2025-10-07 12:09:28,310 - INFO - Flujo completado correctamente.
